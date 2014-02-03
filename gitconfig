@@ -1,0 +1,9 @@
+[color]
+  ui = always
+[gui]
+  encoding = utf-8
+[diff]
+  tool = vimdiff
+
+[merge]
+  tool = vimdiff
