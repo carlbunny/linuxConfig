@@ -2,6 +2,10 @@
   ui = always
 [gui]
   encoding = utf-8
+[alias]
+  l = log --graph --pretty=format:'%C(yellow)%h %C(red)%m %C(blue)%aE    \t%C(green)%d%Creset %s'
+  la = log --all --graph --pretty=format:'%C(yellow)%h %C(red)%m %C(blue)%aE    \t%C(green)%d%Creset %s'
+  
 [diff]
   tool = vimdiff
 

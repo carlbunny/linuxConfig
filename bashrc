@@ -23,15 +23,19 @@ shopt -s histappend
 shopt -s histverify
 
 
-alias egrep='egrep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias grep='grep --color=auto'
+alias egrep='egrep --color=always'
+alias fgrep='fgrep --color=always'
+alias grep='grep --color=always'
 alias l='ls -CF'
 alias la='ls -A'
 alias ll='ls -alF'
-alias ls='ls --color=auto'
+alias ls='ls --color=always'
 alias gdb='cgdb'
 alias ack='ack --color'
+alias less='less -R'
+#for ycm
+alias ctags='ctags --fields=+l'
+
 
 # Bash completion
 if [ -f /etc/bash_completion.d ]; then
@@ -40,7 +44,10 @@ fi
 export PS1='[\[\033[01;32m\]\u@\h\[\033[01;34m\] \w\[\033[01;33m\]$(__git_ps1)\[\033[01;34m\] \$\[\033[00m\]] '
 export GIT_PS1_SHOWDIRTYSTATE=1
 
+# enable something like ctrl+s work in vim
+stty -ixon
 
 
 export PATH=/usr/local/bin:$PATH
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64
+export JAVA_HOME=/usr/local/jdk-6u29-64/

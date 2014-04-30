@@ -1,3 +1,6 @@
+" vimrc fold
+set fdm=marker  
+
 source $ADMIN_SCRIPTS/master.vimrc
 
 " Source the vimrc file after saving it
@@ -14,8 +17,10 @@ if isdirectory($ADMIN_SCRIPTS)
   source $ADMIN_SCRIPTS/master.vimrc
   "source $ADMIN_SCRIPTS/vim/biggrep.vim
   " Have more control over what plugins get loaded
-"  set runtimepath-=$ADMIN_SCRIPTS/vim
+  "  set runtimepath-=$ADMIN_SCRIPTS/vim
 endif
+
+" Vim setting {{{
 
 " make searches case-sensitive only if they contain upper-case characters
 set ignorecase smartcase
@@ -29,8 +34,13 @@ set magic
 set showmatch
 " How many tenths of a second to blink when matching brackets
 set mat=2
+" Enable mouse, not working in mosh now
+set mouse=a
 
 set history=10000
+
+" keep going up a dir until you find a tags file
+set tags=tags;/
 
 set nu
 set ruler
@@ -40,26 +50,19 @@ syntax enable
 "search help for cinoptions-values
 set cinoptions+=g1,h1,N0,i4
 
+" }}}
+"
 "let g:ycm_server_use_vim_stdout = 1
 "let g:ycm_server_log_level = 'debug'
 
-"noremap <F3> :Autoformat<CR><CR>
-map <F5> :set spell! spelllang=en_us<CR>
-nmap <F8> :TagbarToggle<CR>
-nnoremap <F7> :NERDTreeToggle<CR>
-"set paste mode, will disable all the auto function in the view
-set pastetoggle=<F9>
+" Autocommands {{{
 
-hi Visual cterm=NONE ctermbg=darkGrey ctermfg=white
-
-set cursorline
-hi CursorLine cterm=NONE ctermbg=17 "ctermfg=white blue
-" make status line red while in insert mode
+" change cursor line color  while in insert mode {{{ 
 augroup hi_CursorLine
   autocmd!
   autocmd InsertLeave * hi CursorLine ctermbg=17 "ctermfg=white blue
-  autocmd InsertEnter * hi CursorLine ctermbg=236 "ctermfg=white grep
-" autocmd InsertEnter * hi CursorLine ctermbg=52 "ctermfg=white red
+  autocmd InsertEnter * hi CursorLine ctermbg=233 "ctermfg=white grep
+  " autocmd InsertEnter * hi CursorLine ctermbg=52 "ctermfg=white red
 augroup END
 
 " Save on FocusLost
@@ -75,51 +78,97 @@ au VimResized * exe "normal! \<c-w>="
 " Resize splits when the window is resized
 au VimResized * :wincmd =
 
-" max 80 column
+" max 80 column (Use ColorColumn to show inserting window {{{
 augroup BgHighlight
-    autocmd!
-    autocmd WinEnter,VimEnter * set colorcolumn=80
-    autocmd WinLeave * set colorcolumn=0
+  autocmd!
+  autocmd WinEnter,VimEnter * set colorcolumn=80
+  autocmd WinLeave * set colorcolumn=0
 augroup END
 hi ColorColumn ctermbg=darkYellow ctermfg=white guibg=darkblue guifg=white
+" }}}
 
-nnoremap <silent> <Leader>l ml:execute 'match Search /\%'.line('.').'l/'<CR>
+" }}}
+
+" Vim UI {{{
+hi Visual cterm=NONE ctermbg=darkGrey ctermfg=white
+
+set cursorline
+hi CursorLine cterm=NONE ctermbg=17 "ctermfg=white blue
+
+
+" Cursor shape
+let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+" }}}
+
 
 hi clear Search
 hi clear IncSearch 
 hi Search guifg=#ffffff guibg=#0000ff gui=none ctermfg=black  ctermbg=white 
 hi IncSearch guifg=#ffffff guibg=#8888ff gui=none ctermfg=black  ctermbg=white 
 
-" Easy buffer navigation
+" }}}
+
+" key map========== {{{
+
+" Easy buffer navigation {{{
 noremap <C-h> <C-w>h
 noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
+" }}}
 
-" kill any trailing whitespace on save
+" don`t copy the replaced word into the paste buffer
+vnoremap p "_dP
+
+nnoremap <silent> <Leader>l ml:execute 'match Search /\%'.line('.').'l/'<CR>
+
+noremap <F3> :set nu!<CR><CR>
+map <F5> :set spell! spelllang=en_us<CR>
+map <F6> :set ignorecase! <CR>
+nnoremap <F7> :NERDTreeToggle<CR>
+nmap <F8> :TagbarOpenAutoClose<CR>
+"set paste mode, will disable all the auto function in the view
+set pastetoggle=<F9>
+
+" }}}
+
+" kill any trailing whitespace on save {{{
 fun! <SID>StripTrailingWhitespaces()
-    let l = line(".")
-    let c = col(".")
-    %s/\s\+$//e
-    call cursor(l, c)
+  let l = line(".")
+  let c = col(".")
+  %s/\s\+$//e
+  call cursor(l, c)
 endfun
- 
-autocmd FileType c,cabal,cpp,haskell,javascript,php,python,readme,text
-  \ autocmd BufWritePre <buffer>
-  \ :call <SID>StripTrailingWhitespaces()
 
-"vimdiff color
+autocmd FileType c,cabal,cpp,haskell,javascript,php,python,readme,text
+      \ autocmd BufWritePre  <buffer>
+      \ :call <SID>StripTrailingWhitespaces()
+" }}}
+
+" File type mapping {{{
+ filetype on
+ au BufNewFile,BufRead *.tw set filetype=python
+ au BufNewFile,BufRead *.thrift set filetype=cpp
+
+
+" }}}
+
+" color========== {{{
+" vimdiff color {{{
 highlight DiffAdd    cterm=bold ctermfg=White ctermbg=DarkGreen
 highlight DiffDelete cterm=bold ctermfg=White ctermbg=DarkRed
 highlight DiffChange cterm=bold ctermfg=White ctermbg=DarkCyan
 highlight DiffText   cterm=bold ctermfg=Yellow ctermbg=DarkCyan
+" }}}
+" }}}
 
-
-"plugins===============================================================================
-"fugitive
+" plugins=========  {{{
+"fugitive {{{
 set statusline+=%{fugitive#statusline()}
+" }}}
 
-" unit
+" unit {{{
 " The prefix key.
 nnoremap    [unite]   <Nop>
 nmap    <space> [unite]
@@ -132,8 +181,6 @@ nnoremap <silent> [unite]b  :<C-u>UniteWithBufferDir
 nnoremap <silent> [unite]r  :<C-u>Unite
       \ -buffer-name=register register<CR>
 nnoremap <silent> [unite]o  :<C-u>Unite outline<CR>
-nnoremap <silent> [unite]f
-      \ :<C-u>Unite -buffer-name=resume resume<CR>
 nnoremap <silent> [unite]d
       \ :<C-u>Unite -buffer-name=files -default-action=lcd directory_mru<CR>
 nnoremap <silent> [unite]ma
@@ -144,8 +191,13 @@ nnoremap  [unite]f  :<C-u>Unite source<CR>
 "mimic grep and find
 nnoremap [unite]/ :Unite -start-insert grep:.<cr>
 nnoremap [unite]* :UniteWithCursorWord grep:.<cr>
+nnoremap [unite]l :UniteWithCursorWord grep:%<cr>
+"Tab
+nnoremap [unite]t :Unite tab<cr>
 "Resume
 nnoremap [unite]r :UniteResume<cr>
+"Register
+nnoremap [unite]u :Unite -buffer-name=register register<CR>
 "Yank
 nnoremap [unite]y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
 "Search
@@ -179,7 +231,7 @@ function! s:unite_my_settings()"{{{
   nmap <buffer> x     <Plug>(unite_quick_match_choose_action)
   nmap <buffer> <C-z>     <Plug>(unite_toggle_transpose_window)
   imap <buffer> <C-y>     <Plug>(unite_narrowing_path)
-  nmap <buffer> <C-j>     <Plug>(unite_toggle_auto_preview)
+  nmap <buffer> <C-p>     <Plug>(unite_toggle_auto_preview)
   nmap <buffer> <C-r>     <Plug>(unite_narrowing_input_history)
   nnoremap <silent><buffer><expr> l
         \ unite#smart_map('l', unite#do_action('default'))
@@ -196,8 +248,9 @@ function! s:unite_my_settings()"{{{
         \ empty(unite#mappings#get_current_filters()) ?
         \ ['sorter_reverse'] : [])
 
-  " Runs "split" action by <C-s>.
   imap <silent><buffer><expr> <C-s>     unite#do_action('split')
+  imap <silent><buffer><expr> <C-v>     unite#do_action('vsplit')
+  imap <silent><buffer><expr> <C-t>     unite#do_action('tabopen')
 endfunction"}}}
 
 let g:unite_source_file_mru_limit = 200
@@ -207,22 +260,73 @@ let g:unite_source_file_mru_filename_format = ''
 
 " For ack.
 if executable('ack')
-   let g:unite_source_grep_command = 'ack'
-   let g:unite_source_grep_default_opts = '--no-heading --no-color -a -H'
-   let g:unite_source_grep_recursive_opt = ''
+  let g:unite_source_grep_command = 'ack'
+  let g:unite_source_grep_default_opts = '--no-heading --no-color -a -H'
+  let g:unite_source_grep_recursive_opt = ''
 endif
 
-"some old map
-"nnoremap <C-p> :Unite -start-insert file_rec/async<cr>
-"nnoremap <space>/ :Unite -start-insert grep:.<cr>
-"nnoremap <space>* :UniteWithCursorWord grep:.<cr>
-"nnoremap <space>b :Unite -start-insert -quick-match buffer<cr>
-"nnoremap <space>m :<C-u>Unite -no-split -buffer-name=mru -start-insert file_mru<cr>
+" }}}
 
-"airline
-let g:bufferline_echo = 0
+" vimshell {{{
+let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
+"let g:vimshell_right_prompt = 'vcs#info("(%s)-[%b]", "(%s)-[%b|%a]")'
 
-" YCM
+if has('win32') || has('win64')
+  " Display user name on Windows.
+  let g:vimshell_prompt = $USERNAME."% "
+else
+  " Display user name on Linux.
+  let g:vimshell_prompt = $USER."% "
+endif
+
+" Initialize execute file list.
+let g:vimshell_execute_file_list = {}
+call vimshell#set_execute_file('txt,vim,c,h,cpp,d,xml,java', 'vim')
+let g:vimshell_execute_file_list['rb'] = 'ruby'
+let g:vimshell_execute_file_list['pl'] = 'perl'
+let g:vimshell_execute_file_list['py'] = 'python'
+call vimshell#set_execute_file('html,xhtml', 'gexe firefox')
+
+autocmd FileType vimshell
+      \ call vimshell#altercmd#define('g', 'git')
+      \| call vimshell#altercmd#define('i', 'iexe')
+      \| call vimshell#altercmd#define('l', 'll')
+      \| call vimshell#altercmd#define('ll', 'ls -l')
+      \| call vimshell#hook#add('chpwd', 'my_chpwd', 'g:my_chpwd')
+
+function! g:my_chpwd(args, context)
+  call vimshell#execute('ls')
+endfunction
+
+autocmd FileType int-* call s:interactive_settings()
+function! s:interactive_settings()
+endfunction
+" }}}
+
+"airline {{{
+"  variable names                default contents
+"  ----------------------------------------------------------------------------
+"  let g:airline_section_a       (mode, paste, iminsert)
+"  let g:airline_section_b       (hunks, branch)
+"  let g:airline_section_c       (bufferline or filename)
+"  let g:airline_section_gutter  (readonly, csv)
+"  let g:airline_section_x       (tagbar, filetype, virtualenv)
+"  let g:airline_section_y       (fileencoding, fileformat)
+"  let g:airline_section_z       (percentage, line number, column number)
+"  let g:airline_section_warning (syntastic, whitespace)
+
+" control which sections get truncated and at what width. 
+let g:airline#extensions#default#section_truncate_width = { 
+  \ 'b': 80, 
+  \ 'x': 120,
+  \ 'y': 250,
+  \ 'z': 150,
+  \ 'warning': 200, 
+  \ }
+
+" }}}
+
+" YCM {{{
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_min_num_identifier_candidate_chars = 4
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
@@ -235,35 +339,46 @@ let g:ycm_warning_symbol = '!'
 let g:ycm_enable_diagnostic_signs = 1
 let g:ycm_enable_diagnostic_highlighting = 1
 let g:ycm_echo_current_diagnostic = 1
+" using tag in ycm
+let g:ycm_collect_identifiers_from_tags_files = 1 
 
 nnoremap <leader>y :YcmForceCompileAndDiagnostics<cr>
 nnoremap <leader>pg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <leader>pd :YcmCompleter GoToDefinition<CR>
 nnoremap <leader>pc :YcmCompleter GoToDeclaration<CR>
 
-"UltiSnips
+" YCM forceComple on save
+autocmd FileType c, h, cpp, python
+      \ autocmd InsertLeave, WinLeave * :YcmForceCompileAndDiagnostics 
+" }}}
+
+"UltiSnips {{{
 "I have no idea how it is works
-function! g:UltiSnips_Complete()
-    call UltiSnips_ExpandSnippet()
-    if g:ulti_expand_res == 0
-        if pumvisible()
-            return "\<C-n>"
-        else
-            call UltiSnips_JumpForwards()
-            if g:ulti_jump_forwards_res == 0
-               return "\<TAB>"
-            endif
-        endif
-    endif
-    return ""
-endfunction
+"function! g:UltiSnips_Complete()
+  "call UltiSnips_ExpandSnippet()
+  "if g:ulti_expand_res == 0
+    "if pumvisible()
+      "return "\<C-n>"
+    "else
+      "call UltiSnips_JumpForwards()
+      "if g:ulti_jump_forwards_res == 0
+        "return "\<TAB>"
+      "endif
+    "endif
+  "endif
+  "return ""
+"endfunction
 
-au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
-let g:UltiSnipsExpandTrigger="<tab>" 
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsSnippetsDir= '~/.vim/bundle/ultisnips/UltiSnips'
-let g:UltiSnipsSnippetDirectories = ['UltiSnips', 'snippets']
+"au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+"let g:UltiSnipsExpandTrigger="<tab>" 
+"let g:UltiSnipsJumpForwardTrigger="<tab>"
+"let g:UltiSnipsSnippetsDir= '~/.vim/bundle/ultisnips/UltiSnips'
+"let g:UltiSnipsSnippetDirectories = ['UltiSnips', 'snippets']
+" }}}
 
-"autoformat
+"autoformat {{{
 let g:formatprg_cpp = "astyle"
 let g:formatprg_args_cpp = " --style=google --indent=spaces=2 --pad-oper --pad-header --indent-modifiers --attach-classes --indent-col1-comments --max-instatement-indent="
+" }}}
+
+" }}}
