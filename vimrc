@@ -165,7 +165,7 @@ highlight DiffText   cterm=bold ctermfg=Yellow ctermbg=DarkCyan
 
 " plugins=========  {{{
 "fugitive {{{
-set statusline+=%{fugitive#statusline()}
+set statusline+={fugitive#statusline()}
 " }}}
 
 " unit {{{
@@ -188,10 +188,16 @@ nnoremap <silent> [unite]ma
 nnoremap <silent> [unite]me
       \ :<C-u>Unite output:message<CR>
 nnoremap  [unite]f  :<C-u>Unite source<CR>
-"mimic grep and find
-nnoremap [unite]/ :Unite -start-insert grep:.<cr>
-nnoremap [unite]* :UniteWithCursorWord grep:.<cr>
+"grep and find in current vim dir
+nnoremap [unite]f :UniteWithInput grep:.<cr>
+nnoremap [unite]g :UniteWithCursorWord grep:.<cr>
+"grep in current file
+nnoremap [unite]k :UniteWithInput grep:%<cr>
 nnoremap [unite]l :UniteWithCursorWord grep:%<cr>
+"grep in the current bufer dir
+nnoremap [unite]/ :Unite -start-insert grep:<C-R>=expand("%:p:h")<CR><CR>
+nnoremap [unite]* :UniteWithCursorWord grep:<C-R>=expand("%:p:h")<CR><CR>
+
 "Tab
 nnoremap [unite]t :Unite tab<cr>
 "Resume
@@ -214,6 +220,9 @@ let g:unite_source_directory_mru_long_limit = 3000
 
 " Prompt choices.
 let g:unite_prompt = '» '
+
+" open preview vertically
+let g:unite_kind_file_vertical_preview = 1
 
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()"{{{
