@@ -150,6 +150,7 @@ autocmd FileType c,cabal,cpp,haskell,javascript,php,python,readme,text
  filetype on
  au BufNewFile,BufRead *.tw set filetype=python
  au BufNewFile,BufRead *.thrift set filetype=cpp
+ au BufNewFile,BufRead TARGETS set filetype=python
 
 
 " }}}
@@ -257,9 +258,16 @@ function! s:unite_my_settings()"{{{
         \ empty(unite#mappings#get_current_filters()) ?
         \ ['sorter_reverse'] : [])
 
-  imap <silent><buffer><expr> <C-s>     unite#do_action('split')
-  imap <silent><buffer><expr> <C-v>     unite#do_action('vsplit')
-  imap <silent><buffer><expr> <C-t>     unite#do_action('tabopen')
+" why we have two for each line is because
+" noremap is in normal mode(normal,visual,operator pending) 
+" inoremap is in insert mode
+
+  noremap <silent><buffer><expr> <C-s>     unite#do_action('split')
+  inoremap <silent><buffer><expr> <C-s>     unite#do_action('split')
+  noremap <silent><buffer><expr> <C-v>     unite#do_action('vsplit')
+  inoremap <silent><buffer><expr> <C-v>     unite#do_action('vsplit')
+  noremap <silent><buffer><expr> <C-t>     unite#do_action('tabopen')
+  inoremap <silent><buffer><expr> <C-t>     unite#do_action('tabopen')
 endfunction"}}}
 
 let g:unite_source_file_mru_limit = 200
@@ -332,6 +340,14 @@ let g:airline#extensions#default#section_truncate_width = {
   \ 'z': 150,
   \ 'warning': 200, 
   \ }
+
+" }}}
+
+" tab line {{{
+
+hi TabLine      ctermfg=Black  ctermbg=DarkGreen     cterm=NONE
+hi TabLineFill  ctermfg=Black  ctermbg=Green     cterm=NONE
+hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
 
 " }}}
 
