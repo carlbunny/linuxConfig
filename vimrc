@@ -1,8 +1,6 @@
 " vimrc fold
 set fdm=marker  
 
-source $ADMIN_SCRIPTS/master.vimrc
-
 " Source the vimrc file after saving it
 if has("autocmd")
   autocmd bufwritepost .vimrc source $MYVIMRC
@@ -12,6 +10,7 @@ endif
 let g:pathogen_disabled = []
 
 call pathogen#infect() 
+Helptags
 
 if isdirectory($ADMIN_SCRIPTS)
   source $ADMIN_SCRIPTS/master.vimrc
@@ -62,7 +61,6 @@ augroup hi_CursorLine
   autocmd!
   autocmd InsertLeave * hi CursorLine ctermbg=17 "ctermfg=white blue
   autocmd InsertEnter * hi CursorLine ctermbg=233 "ctermfg=white grep
-  " autocmd InsertEnter * hi CursorLine ctermbg=52 "ctermfg=white red
 augroup END
 
 " Save on FocusLost
@@ -97,8 +95,8 @@ hi CursorLine cterm=NONE ctermbg=17 "ctermfg=white blue
 
 
 " Cursor shape
-let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 " }}}
 
 
@@ -157,10 +155,10 @@ autocmd FileType c,cabal,cpp,haskell,javascript,php,python,readme,text
 
 " color========== {{{
 " vimdiff color {{{
-highlight DiffAdd    cterm=bold ctermfg=White ctermbg=DarkGreen
-highlight DiffDelete cterm=bold ctermfg=White ctermbg=DarkRed
-highlight DiffChange cterm=bold ctermfg=White ctermbg=DarkCyan
-highlight DiffText   cterm=bold ctermfg=Yellow ctermbg=DarkCyan
+highlight DiffAdd    cterm=bold ctermbg=22 " Green
+highlight DiffDelete cterm=bold ctermbg=52 " Red
+highlight DiffChange cterm=bold ctermbg=17 " Blue
+highlight DiffText   cterm=bold ctermbg=18
 " }}}
 " }}}
 
@@ -196,13 +194,17 @@ nnoremap [unite]g :UniteWithCursorWord grep:.<cr>
 nnoremap [unite]k :UniteWithInput grep:%<cr>
 nnoremap [unite]l :UniteWithCursorWord grep:%<cr>
 "grep in the current bufer dir
-nnoremap [unite]/ :Unite -start-insert grep:<C-R>=expand("%:p:h")<CR><CR>
+nnoremap [unite]/ :UniteWithInput grep:<C-R>=expand("%:p:h")<CR><CR>
 nnoremap [unite]* :UniteWithCursorWord grep:<C-R>=expand("%:p:h")<CR><CR>
 
 "Tab
 nnoremap [unite]t :Unite tab<cr>
 "Resume
 nnoremap [unite]r :UniteResume<cr>
+"Window
+nnoremap [unite]w :Unite window<cr>
+"Jump
+nnoremap [unite]j :Unite jump<cr>
 "Register
 nnoremap [unite]u :Unite -buffer-name=register register<CR>
 "Yank
@@ -284,42 +286,6 @@ endif
 
 " }}}
 
-" vimshell {{{
-let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
-"let g:vimshell_right_prompt = 'vcs#info("(%s)-[%b]", "(%s)-[%b|%a]")'
-
-if has('win32') || has('win64')
-  " Display user name on Windows.
-  let g:vimshell_prompt = $USERNAME."% "
-else
-  " Display user name on Linux.
-  let g:vimshell_prompt = $USER."% "
-endif
-
-" Initialize execute file list.
-let g:vimshell_execute_file_list = {}
-call vimshell#set_execute_file('txt,vim,c,h,cpp,d,xml,java', 'vim')
-let g:vimshell_execute_file_list['rb'] = 'ruby'
-let g:vimshell_execute_file_list['pl'] = 'perl'
-let g:vimshell_execute_file_list['py'] = 'python'
-call vimshell#set_execute_file('html,xhtml', 'gexe firefox')
-
-autocmd FileType vimshell
-      \ call vimshell#altercmd#define('g', 'git')
-      \| call vimshell#altercmd#define('i', 'iexe')
-      \| call vimshell#altercmd#define('l', 'll')
-      \| call vimshell#altercmd#define('ll', 'ls -l')
-      \| call vimshell#hook#add('chpwd', 'my_chpwd', 'g:my_chpwd')
-
-function! g:my_chpwd(args, context)
-  call vimshell#execute('ls')
-endfunction
-
-autocmd FileType int-* call s:interactive_settings()
-function! s:interactive_settings()
-endfunction
-" }}}
-
 "airline {{{
 "  variable names                default contents
 "  ----------------------------------------------------------------------------
@@ -374,31 +340,7 @@ nnoremap <leader>pc :YcmCompleter GoToDeclaration<CR>
 
 " YCM forceComple on save
 autocmd FileType c, h, cpp, python
-      \ autocmd InsertLeave, WinLeave * :YcmForceCompileAndDiagnostics 
-" }}}
-
-"UltiSnips {{{
-"I have no idea how it is works
-"function! g:UltiSnips_Complete()
-  "call UltiSnips_ExpandSnippet()
-  "if g:ulti_expand_res == 0
-    "if pumvisible()
-      "return "\<C-n>"
-    "else
-      "call UltiSnips_JumpForwards()
-      "if g:ulti_jump_forwards_res == 0
-        "return "\<TAB>"
-      "endif
-    "endif
-  "endif
-  "return ""
-"endfunction
-
-"au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
-"let g:UltiSnipsExpandTrigger="<tab>" 
-"let g:UltiSnipsJumpForwardTrigger="<tab>"
-"let g:UltiSnipsSnippetsDir= '~/.vim/bundle/ultisnips/UltiSnips'
-"let g:UltiSnipsSnippetDirectories = ['UltiSnips', 'snippets']
+      \ autocmd BufWritePost * YcmForceCompileAndDiagnostics 
 " }}}
 
 "autoformat {{{

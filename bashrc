@@ -29,14 +29,21 @@ alias grep='grep --color=always'
 alias l='ls -CF'
 alias la='ls -A'
 alias ll='ls -alF'
-alias ls='ls --color=always'
-alias gdb='cgdb'
+alias ls='ls --color=always -h'
+alias df='df -h'
+alias du='du -h'
 alias ack='ack --color'
 alias less='less -R'
 #for ycm
 alias ctags='ctags --fields=+l'
+#for db client
+db() {
+  command db "$@" --auto_rehash
+}
 
-
+dbdump() {
+  command db -d -r "$@"
+}
 # Bash completion
 if [ -f /etc/bash_completion.d ]; then
   . /etc/bash_completion.d
