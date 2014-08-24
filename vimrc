@@ -34,7 +34,7 @@ set showmatch
 " How many tenths of a second to blink when matching brackets
 set mat=2
 " Enable mouse, not working in mosh now
-set mouse=a
+set mouse=
 
 set history=10000
 
@@ -47,6 +47,11 @@ syntax enable
 
 "indent
 "search help for cinoptions-values
+
+set expandtab
+set shiftwidth=2
+set softtabstop=2
+
 set cinoptions+=g1,h1,N0,i4
 
 " }}}
@@ -172,11 +177,11 @@ set statusline+={fugitive#statusline()}
 nnoremap    [unite]   <Nop>
 nmap    <space> [unite]
 
-nnoremap <C-p> :Unite -start-insert file_rec/async<cr>
+nnoremap <silent> [unite]s  :Unite -start-insert file_rec/async<cr>
 nnoremap <silent> [unite]c  :<C-u>UniteWithCurrentDir
       \ -buffer-name=files buffer file_mru bookmark file<CR>
 nnoremap <silent> [unite]b  :<C-u>UniteWithBufferDir
-      \ -buffer-name=files -prompt=%\  buffer file_mru bookmark file<CR>
+      \ -buffer-name=files -prompt=%\  file buffer file_mru bookmark<CR>
 nnoremap <silent> [unite]r  :<C-u>Unite
       \ -buffer-name=register register<CR>
 nnoremap <silent> [unite]o  :<C-u>Unite outline<CR>
@@ -209,11 +214,6 @@ nnoremap [unite]j :Unite jump<cr>
 nnoremap [unite]u :Unite -buffer-name=register register<CR>
 "Yank
 nnoremap [unite]y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
-"Search
-nnoremap <silent> [unite]s
-      \ :<C-u>Unite -buffer-name=files -no-split -start-insert
-      \ jump_point file_point buffer_tab
-      \ file_rec:! file file/new file_mru<CR>
 
 let g:unite_enable_short_source_names = 1
 
@@ -303,7 +303,7 @@ let g:airline#extensions#default#section_truncate_width = {
   \ 'b': 80, 
   \ 'x': 120,
   \ 'y': 250,
-  \ 'z': 150,
+  \ 'z': 60,
   \ 'warning': 200, 
   \ }
 
