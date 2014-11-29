@@ -6,18 +6,16 @@
 #
 
 # Source Prezto.
-if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-fi
+source $HOME/.zprezto/runcoms/zshrc
 
 # Customize to your needs...
-
 if [[ -s '/mnt/vol/engshare/admin/scripts' ]]; then
+  # On devserver
   [[ -z "$ADMIN_SCRIPTS" ]] && export ADMIN_SCRIPTS='/mnt/vol/engshare/admin/scripts'
   source "${ADMIN_SCRIPTS}/master.zshrc"
 
   source "${ADMIN_SCRIPTS}/scm-prompt"
-else 
+else
   source "~/scm-prompt"
 fi
 
@@ -26,8 +24,23 @@ if [ -f ~/.bash_aliases ]; then
 	. ~/.bash_aliases
 fi
 
+# weird zsh history
+alias history='history 1'
+
 autoload -Uz promptinit
 promptinit
 prompt carlbunny
+#prompt peepcode
 
-export PATH=$HOME/bin:/usr/local/bin:$PATH
+export EDITOR=/usr/local/bin/vim
+export VISUAL=/usr/local/bin/vim
+
+zssh() ssh "$@" -t zsh
+
+#key binding
+#bindkey '"\C-p": shell-backward-kill-word'
+
+# Instead of
+# INC_APPEND_HISTORY,
+# this will let history go to share after the succession exist.
+#setopt APPEND_HISTORY

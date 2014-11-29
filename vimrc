@@ -19,6 +19,9 @@ if isdirectory($ADMIN_SCRIPTS)
   "  set runtimepath-=$ADMIN_SCRIPTS/vim
 endif
 
+set wildmode=longest,list,full
+set wildmenu
+
 " Vim setting {{{
 
 " make searches case-sensitive only if they contain upper-case characters
@@ -172,16 +175,20 @@ highlight DiffText   cterm=bold ctermbg=18
 set statusline+={fugitive#statusline()}
 " }}}
 
+"vim-cpp-enhanced-highlight {{{
+let g:cpp_class_scope_highlight = 1
+" }}}
+
 " unit {{{
 " The prefix key.
 nnoremap    [unite]   <Nop>
 nmap    <space> [unite]
 
 nnoremap <silent> [unite]s  :Unite -start-insert file_rec/async<cr>
-nnoremap <silent> [unite]c  :<C-u>UniteWithCurrentDir
-      \ -buffer-name=files buffer file_mru bookmark file<CR>
-nnoremap <silent> [unite]b  :<C-u>UniteWithBufferDir
-      \ -buffer-name=files -prompt=%\  file buffer file_mru bookmark<CR>
+nnoremap <silent> [unite]c  :<C-u>UniteWithCurrentDir -start-insert
+      \ -buffer-name=files file buffer file_mru bookmark<CR>
+nnoremap <silent> [unite]b  :<C-u>UniteWithBufferDir -start-insert
+      \ -buffer-name=files -prompt=%\  buffer file file_mru<CR>
 nnoremap <silent> [unite]r  :<C-u>Unite
       \ -buffer-name=register register<CR>
 nnoremap <silent> [unite]o  :<C-u>Unite outline<CR>
@@ -255,7 +262,9 @@ function! s:unite_my_settings()"{{{
     nnoremap <silent><buffer><expr> r     unite#do_action('rename')
   endif
 
-  nnoremap <silent><buffer><expr> cd     unite#do_action('lcd')
+  nnoremap <silent><buffer><expr> lc     unite#do_action('lcd')
+  nnoremap <silent><buffer><expr> c     unite#do_action('cd')
+  nnoremap <silent><buffer><expr> u     unite#do_action('rec_parent')
   nnoremap <buffer><expr> S      unite#mappings#set_current_filters(
         \ empty(unite#mappings#get_current_filters()) ?
         \ ['sorter_reverse'] : [])
@@ -331,7 +340,7 @@ let g:ycm_enable_diagnostic_signs = 1
 let g:ycm_enable_diagnostic_highlighting = 1
 let g:ycm_echo_current_diagnostic = 1
 " using tag in ycm
-let g:ycm_collect_identifiers_from_tags_files = 1 
+let g:ycm_collect_identifiers_from_tags_files = 0 
 
 nnoremap <leader>y :YcmForceCompileAndDiagnostics<cr>
 nnoremap <leader>pg :YcmCompleter GoToDefinitionElseDeclaration<CR>
@@ -339,8 +348,8 @@ nnoremap <leader>pd :YcmCompleter GoToDefinition<CR>
 nnoremap <leader>pc :YcmCompleter GoToDeclaration<CR>
 
 " YCM forceComple on save
-autocmd FileType c, h, cpp, python
-      \ autocmd BufWritePost * YcmForceCompileAndDiagnostics 
+"autocmd FileType c, h, cpp, python
+      "\ autocmd BufWritePost * YcmForceCompileAndDiagnostics 
 " }}}
 
 "autoformat {{{

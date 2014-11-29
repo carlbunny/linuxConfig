@@ -25,7 +25,7 @@ case $_myos in
    *) ;;
 esac
 
-#for db client
+for db client
 db() {
   command db "$@" --auto_rehash
 }

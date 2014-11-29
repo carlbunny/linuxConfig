@@ -35,7 +35,7 @@ function prompt_sorin_precmd {
   if (( $+functions[_dotfiles_scm_info] )); then
     scm_info_string=$(_dotfiles_scm_info)
     if [ ! -z "$scm_info_string" ]; then
-      scm_info_string="(${scm_info_string})"
+      scm_info_string="${scm_info_string}"
     fi
   fi
   #if (( $+functions[git-info] )); then
@@ -84,7 +84,7 @@ function prompt_sorin_setup {
 
   # Define prompts.
   #PROMPT='[%F{118}%n@%m%f %F{33}${_prompt_sorin_pwd}%f %F{yellow}${git_info:+${(e)git_info[prompt]}}%(!.%B%F{red}#%f%b.)${editor_info[keymap]}] '
-  PROMPT='[%F{118}%n@%m%f %F{33}${_prompt_sorin_pwd}%f %F{yellow}${scm_info_string}%(!.%B%F{red}#%f%b.)${editor_info[keymap]}] '
+  PROMPT='[%F{118}%n@%m%f %F{33}${_prompt_sorin_pwd}%f%F{yellow}${scm_info_string}%(!.%B%F{red}#%f%b.)${editor_info[keymap]}] '
   RPROMPT="${return_code}"
   SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
 }
