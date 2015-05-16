@@ -51,6 +51,10 @@ syntax enable
 "indent
 "search help for cinoptions-values
 
+set autoindent
+" It will increase the indent in a new block.
+set smartindent
+
 set expandtab
 set shiftwidth=2
 set softtabstop=2
@@ -117,6 +121,9 @@ hi IncSearch guifg=#ffffff guibg=#8888ff gui=none ctermfg=black  ctermbg=white
 
 " key map========== {{{
 
+"Map jj to escape
+inoremap jj <Esc>
+
 " Easy buffer navigation {{{
 noremap <C-h> <C-w>h
 noremap <C-j> <C-w>j
@@ -133,7 +140,7 @@ noremap <F3> :set nu!<CR><CR>
 map <F5> :set spell! spelllang=en_us<CR>
 map <F6> :set ignorecase! <CR>
 nnoremap <F7> :NERDTreeToggle<CR>
-nmap <F8> :TagbarOpenAutoClose<CR>
+nmap <F8> :Tagbar<CR>
 "set paste mode, will disable all the auto function in the view
 set pastetoggle=<F9>
 
@@ -157,6 +164,7 @@ autocmd FileType c,cabal,cpp,haskell,javascript,php,python,readme,text
  au BufNewFile,BufRead *.tw set filetype=python
  au BufNewFile,BufRead *.thrift set filetype=cpp
  au BufNewFile,BufRead TARGETS set filetype=python
+ au BufNewFile,BufRead *.cconf set filetype=python
 
 
 " }}}
@@ -171,6 +179,10 @@ highlight DiffText   cterm=bold ctermbg=18
 " }}}
 
 " plugins=========  {{{
+" tagbar {{{
+  autocmd WinEnter,VimEnter, BufEnter  * nested :call tagbar#autoopen(1)
+" }}}
+
 "fugitive {{{
 set statusline+={fugitive#statusline()}
 " }}}
@@ -185,15 +197,16 @@ nnoremap    [unite]   <Nop>
 nmap    <space> [unite]
 
 nnoremap <silent> [unite]s  :Unite -start-insert file_rec/async<cr>
-nnoremap <silent> [unite]c  :<C-u>UniteWithCurrentDir -start-insert
-      \ -buffer-name=files file buffer file_mru bookmark<CR>
+"nnoremap <silent> [unite]b  :<C-u>Unite -start-insert
+      "\ -buffer-name=buffer <CR>
 nnoremap <silent> [unite]b  :<C-u>UniteWithBufferDir -start-insert
       \ -buffer-name=files -prompt=%\  buffer file file_mru<CR>
 nnoremap <silent> [unite]r  :<C-u>Unite
       \ -buffer-name=register register<CR>
 nnoremap <silent> [unite]o  :<C-u>Unite outline<CR>
 nnoremap <silent> [unite]d
-      \ :<C-u>Unite -buffer-name=files -default-action=lcd directory_mru<CR>
+      \ :<C-u>UniteWithBufferDir -start-insert
+      \ -buffer-name=files -default-action=lcd directory_mru<CR>
 nnoremap <silent> [unite]ma
       \ :<C-u>Unite mapping<CR>
 nnoremap <silent> [unite]me
@@ -217,6 +230,8 @@ nnoremap [unite]r :UniteResume<cr>
 nnoremap [unite]w :Unite window<cr>
 "Jump
 nnoremap [unite]j :Unite jump<cr>
+"Changes
+nnoremap [unite]c :Unite change<cr>
 "Register
 nnoremap [unite]u :Unite -buffer-name=register register<CR>
 "Yank
@@ -328,7 +343,7 @@ hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
 
 " YCM {{{
 let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_min_num_identifier_candidate_chars = 4
+let g:ycm_min_num_identifier_candidate_chars = 2
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
 let g:ycm_seed_identifiers_with_syntax = 1 
 let g:ycm_confirm_extra_conf = 0 "disable annomying "ycm_extra_conf.py. Load?" popup everytime
@@ -340,7 +355,7 @@ let g:ycm_enable_diagnostic_signs = 1
 let g:ycm_enable_diagnostic_highlighting = 1
 let g:ycm_echo_current_diagnostic = 1
 " using tag in ycm
-let g:ycm_collect_identifiers_from_tags_files = 0 
+" let g:ycm_collect_identifiers_from_tags_files = 0 
 
 nnoremap <leader>y :YcmForceCompileAndDiagnostics<cr>
 nnoremap <leader>pg :YcmCompleter GoToDefinitionElseDeclaration<CR>

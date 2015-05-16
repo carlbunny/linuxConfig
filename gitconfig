@@ -1,5 +1,5 @@
 [color]
-  ui = always
+  ui = true
 [gui]
   encoding = utf-8
 [alias]
@@ -11,3 +11,5 @@
 
 [merge]
   tool = vimdiff
+[user]
+	email = carlfu@fb.com

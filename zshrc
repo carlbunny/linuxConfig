@@ -32,8 +32,10 @@ promptinit
 prompt carlbunny
 #prompt peepcode
 
-export EDITOR=/usr/local/bin/vim
-export VISUAL=/usr/local/bin/vim
+export EDITOR=$(which vim)
+export VISUAL=$(which vim)
+
+export PATH=$PATH:~/bin
 
 zssh() ssh "$@" -t zsh
 
