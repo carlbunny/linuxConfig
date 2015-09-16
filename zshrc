@@ -46,3 +46,16 @@ zssh() ssh "$@" -t zsh
 # INC_APPEND_HISTORY,
 # this will let history go to share after the succession exist.
 #setopt APPEND_HISTORY
+HISTSIZE=130000 SAVEHIST=130000
+
+#run tmux on login
+if [[ -z "$TMUX" ]] && [[ "$_myos" = "Linux" ]] ;then
+  ID=$(tmux ls | grep -vm1 attached | cut -d: -f1) # get the id of a deattached session
+  if [[ -z "$ID" ]] ;then # if not available create a new one
+      tmux new-session 
+  else
+      tmux attach -d -t "$ID" # if available attach to it
+  fi
+fi
+
+

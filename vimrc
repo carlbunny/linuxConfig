@@ -19,6 +19,9 @@ if isdirectory($ADMIN_SCRIPTS)
   "  set runtimepath-=$ADMIN_SCRIPTS/vim
 endif
 
+"copy to tmux
+set clipboard=unnamed
+
 set wildmode=longest,list,full
 set wildmenu
 
@@ -123,6 +126,7 @@ hi IncSearch guifg=#ffffff guibg=#8888ff gui=none ctermfg=black  ctermbg=white
 
 "Map jj to escape
 inoremap jj <Esc>
+inoremap kk <Esc>
 
 " Easy buffer navigation {{{
 noremap <C-h> <C-w>h
@@ -197,16 +201,12 @@ nnoremap    [unite]   <Nop>
 nmap    <space> [unite]
 
 nnoremap <silent> [unite]s  :Unite -start-insert file_rec/async<cr>
-"nnoremap <silent> [unite]b  :<C-u>Unite -start-insert
-      "\ -buffer-name=buffer <CR>
-nnoremap <silent> [unite]b  :<C-u>UniteWithBufferDir -start-insert
+nnoremap <silent> [unite]b  :<C-u>Unite -start-insert -buffer-name=files buffer file <CR>
+nnoremap <silent> [unite]d  :<C-u>UniteWithBufferDir -start-insert
       \ -buffer-name=files -prompt=%\  buffer file file_mru<CR>
 nnoremap <silent> [unite]r  :<C-u>Unite
       \ -buffer-name=register register<CR>
 nnoremap <silent> [unite]o  :<C-u>Unite outline<CR>
-nnoremap <silent> [unite]d
-      \ :<C-u>UniteWithBufferDir -start-insert
-      \ -buffer-name=files -default-action=lcd directory_mru<CR>
 nnoremap <silent> [unite]ma
       \ :<C-u>Unite mapping<CR>
 nnoremap <silent> [unite]me

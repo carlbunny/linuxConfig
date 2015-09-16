@@ -27,15 +27,15 @@ esac
 
 #for db client
 db() {
-  command db -u "$@" --auto_rehash
+  if [[ -t 1 ]]; then
+    command db -u "$@" --auto_rehash
+  else 
+    command db "$@"
+  fi
 }
 
 dbdump() {
   command db -d -r "$@"
-}
-
-ssr() {
-  command ssh root@$@
 }
 
 fbmake() {
@@ -44,4 +44,8 @@ fbmake() {
   else
     command fbmake $@
   fi
+}
+
+fbconfig() {
+  command fbconfig --clang $@
 }

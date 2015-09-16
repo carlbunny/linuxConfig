@@ -85,7 +85,7 @@ function prompt_sorin_setup {
   # Define prompts.
   #PROMPT='[%F{118}%n@%m%f %F{33}${_prompt_sorin_pwd}%f %F{yellow}${git_info:+${(e)git_info[prompt]}}%(!.%B%F{red}#%f%b.)${editor_info[keymap]}] '
   PROMPT='[%F{118}%n@%m%f %F{33}${_prompt_sorin_pwd}%f%F{yellow}${scm_info_string}%(!.%B%F{red}#%f%b.)${editor_info[keymap]}] '
-  RPROMPT="${return_code}"
+  RPROMPT="${return_code} %F{blue}[%F{yellow}%D{%H:%M:%S}%F{blue}]%f"
   SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
 }
 
