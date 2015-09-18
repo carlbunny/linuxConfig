@@ -10,7 +10,6 @@ endif
 let g:pathogen_disabled = []
 
 call pathogen#infect() 
-Helptags
 
 if isdirectory($ADMIN_SCRIPTS)
   source $ADMIN_SCRIPTS/master.vimrc
