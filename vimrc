@@ -39,7 +39,7 @@ set showmatch
 " How many tenths of a second to blink when matching brackets
 set mat=2
 " Enable mouse, not working in mosh now
-set mouse=
+set mouse=a
 
 set history=10000
 

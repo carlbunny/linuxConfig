@@ -8,7 +8,11 @@
 #   http://i.imgur.com/nBEEZ.png
 #
 
-local return_code="%(?..%F{red}%?)"
+return_code="%(?..%F{red}%?)"
+PROMPT_BASE='[%F{118}%n@%m%f %F{33}${_prompt_sorin_pwd}%f%F{yellow}${scm_info_string}%(!.%B%F{red}#%f%b.)${editor_info[keymap]}] '
+#RPROMPT_BASE="${return_code} %F{blue}[%F{yellow}%D{%H:%M:%S}%F{blue}]%f"
+RPROMPT_BASE="%F{blue}[%F{yellow}%D{%H:%M:%S}%F{blue}]%f"
+SPROMPT_BASE='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
 
 # Load dependencies.
 pmodload 'helper'
@@ -42,6 +46,24 @@ function prompt_sorin_precmd {
     #git-info
   #fi
 }
+
+################################################################################
+# Show the exec time
+# Note RPROMPT itself can not extract bash variable, so we construct RPROMPT 
+# every time
+function preexec() {
+    timer=${timer:-$SECONDS}
+}
+
+function precmd() {
+  if [ $timer ]; then
+    timer_show=$(($SECONDS - $timer))
+    exec_time="%F{cyan}${timer_show}s"
+    RPROMPT="${return_code} ${exec_time} ${RPROMPT_BASE}"
+    unset timer
+  fi
+}
+################################################################################
 
 function prompt_sorin_setup {
   setopt LOCAL_OPTIONS
@@ -83,10 +105,9 @@ function prompt_sorin_setup {
   # 33 : blue
 
   # Define prompts.
-  #PROMPT='[%F{118}%n@%m%f %F{33}${_prompt_sorin_pwd}%f %F{yellow}${git_info:+${(e)git_info[prompt]}}%(!.%B%F{red}#%f%b.)${editor_info[keymap]}] '
-  PROMPT='[%F{118}%n@%m%f %F{33}${_prompt_sorin_pwd}%f%F{yellow}${scm_info_string}%(!.%B%F{red}#%f%b.)${editor_info[keymap]}] '
-  RPROMPT="${return_code} %F{blue}[%F{yellow}%D{%H:%M:%S}%F{blue}]%f"
-  SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
+  PROMPT=$PROMPT_BASE
+  RPROMPT=$RPROMPT_BASE
+  SPROMPT=$SPROMPT_BASE
 }
 
 prompt_sorin_setup "$@"

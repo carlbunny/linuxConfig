@@ -11,6 +11,7 @@ alias df='df -h'
 alias du='du -h'
 alias ack='ack --color'
 alias less='less -R'
+alias pstree='pstree -p'
 #for ycm
 alias ctags='ctags --fields=+l'
 
