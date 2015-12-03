@@ -61,6 +61,8 @@ function precmd() {
     exec_time="%F{cyan}${timer_show}s"
     RPROMPT="${return_code} ${exec_time} ${RPROMPT_BASE}"
     unset timer
+  else 
+    RPROMPT="${return_code} ${RPROMPT_BASE}"
   fi
 }
 ################################################################################
