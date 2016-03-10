@@ -8,6 +8,9 @@
 #   http://i.imgur.com/nBEEZ.png
 #
 
+# TODO: LS_COLOR
+# http://geoff.greer.fm/lscolors/
+
 return_code="%(?..%F{red}%?)"
 PROMPT_BASE='[%F{118}%n@%m%f %F{33}${_prompt_sorin_pwd}%f%F{yellow}${scm_info_string}%(!.%B%F{red}#%f%b.)${editor_info[keymap]}] '
 #RPROMPT_BASE="${return_code} %F{blue}[%F{yellow}%D{%H:%M:%S}%F{blue}]%f"

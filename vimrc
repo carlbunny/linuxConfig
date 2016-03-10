@@ -18,6 +18,11 @@ if isdirectory($ADMIN_SCRIPTS)
   "  set runtimepath-=$ADMIN_SCRIPTS/vim
 endif
 
+" compiler
+if executable("buck")
+  compiler buck
+endif
+
 "copy to tmux
 set clipboard=unnamed
 
@@ -301,11 +306,11 @@ let g:unite_source_file_mru_limit = 200
 let g:unite_source_file_mru_filename_format = ''
 
 " For ack.
-if executable('ack')
-  let g:unite_source_grep_command = 'ack'
-  let g:unite_source_grep_default_opts = '--no-heading --no-color -a -H'
-  let g:unite_source_grep_recursive_opt = ''
-endif
+"if executable('ack')
+  "let g:unite_source_grep_command = 'ack'
+  "let g:unite_source_grep_default_opts = '--no-heading --no-color -a -H'
+  "let g:unite_source_grep_recursive_opt = ''
+"endif
 
 " }}}
 

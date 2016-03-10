@@ -47,6 +47,10 @@ fbmake() {
   fi
 }
 
+bbd() {
+  command buck build @mode/dbg
+}
+
 fbconfig() {
   command fbconfig --clang $@
 }
