@@ -39,6 +39,9 @@ export PATH=$PATH:~/bin
 
 zssh() ssh "$@" -t zsh
 
+# Disable hostname completion, maybe it is the cause of the slowness
+zstyle ':completion:*' hosts off
+
 #key binding
 #bindkey '"\C-p": shell-backward-kill-word'
 

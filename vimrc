@@ -29,6 +29,10 @@ set clipboard=unnamed
 set wildmode=longest,list,full
 set wildmenu
 
+" + and - to resize window
+nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
+nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
+
 " Vim setting {{{
 
 " make searches case-sensitive only if they contain upper-case characters
