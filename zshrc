@@ -5,6 +5,9 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+# Update from github
+# git pull && git submodule update --init --recursive
+
 # Source Prezto.
 source $HOME/.zprezto/runcoms/zshrc
 
@@ -39,8 +42,21 @@ export PATH=$PATH:~/bin
 
 zssh() ssh "$@" -t zsh
 
+# Used for partially accept auto-suggestion
+bindkey "^o" forward-word
+
 # Disable hostname completion, maybe it is the cause of the slowness
 zstyle ':completion:*' hosts off
+# Speed up the zsh completion
+
+zstyle ':completion:*' accept-exact '*(N)'
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+
+# Try to slove cd completion slow under git.
+__git_files () {
+  _wanted files expl 'local files' _files   
+}
 
 #key binding
 #bindkey '"\C-p": shell-backward-kill-word'
