@@ -44,6 +44,7 @@ zssh() ssh "$@" -t zsh
 
 # Used for partially accept auto-suggestion
 bindkey "^o" forward-word
+set ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
 
 # Disable hostname completion, maybe it is the cause of the slowness
 zstyle ':completion:*' hosts off
