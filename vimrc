@@ -18,11 +18,6 @@ if isdirectory($ADMIN_SCRIPTS)
   "  set runtimepath-=$ADMIN_SCRIPTS/vim
 endif
 
-" compiler
-if executable("buck")
-  compiler buck
-endif
-
 "copy to tmux
 set clipboard=unnamed
 
@@ -180,6 +175,10 @@ autocmd FileType c,cabal,cpp,haskell,javascript,php,python,readme,text
 
 
 " }}}
+
+" compiler
+compiler! buck
+autocmd FileType c,cpp compiler! buck
 
 " color========== {{{
 " vimdiff color {{{

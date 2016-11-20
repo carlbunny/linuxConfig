@@ -38,7 +38,7 @@ prompt carlbunny
 export EDITOR=$(which vim)
 export VISUAL=$(which vim)
 
-export PATH=$PATH:~/bin
+export PATH=~/bin:$PATH
 
 zssh() ssh "$@" -t zsh
 

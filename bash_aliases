@@ -15,6 +15,9 @@ alias pstree='pstree -p'
 #for ycm
 alias ctags='ctags --fields=+l'
 
+alias fbgcc='/usr/local/fbcode/gcc-5-glibc-2.23/bin/g++'
+alias g++='/usr/local/fbcode/gcc-5-glibc-2.23/bin/g++'
+
 ### Get os name via uname ###
 _myos="$(uname)"
 

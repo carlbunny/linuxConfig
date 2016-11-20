@@ -2,7 +2,7 @@
 " cd ~/.vim/compiler/buck.vim && ln -s ~/linuxConfig/buck.vim buck.vim 
 
 if exists("current_compiler")
-    finish
+  let current_compiler = "buck"
 endif
 let current_compiler = "buck"
 

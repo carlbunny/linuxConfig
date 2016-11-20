@@ -39,6 +39,6 @@ export GIT_PS1_SHOWDIRTYSTATE=1
 stty -ixon
 
 
-export PATH=/usr/local/bin:$PATH
+export PATH=/usr/local/bin:$PATH:/usr/local/fbcode/gcc-4.9-glibc-2.20-fb/bin/
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/lib64
 export JAVA_HOME=/usr/local/jdk-6u29-64/
