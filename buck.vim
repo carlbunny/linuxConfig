@@ -16,6 +16,7 @@ CompilerSet errorformat=
   \%E%f:%l:%c:\ error:\ %m,
   \%W%f:%l:%c:\ warning:\ %m,
   \%I%f:%l:%c:\ note:\ %m,
+  \%E%f:%l:%c:\ required\ %m,
   \%\\e
 
 let &cpo = s:cpo_save

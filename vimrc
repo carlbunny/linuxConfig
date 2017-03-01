@@ -69,8 +69,10 @@ set cinoptions+=g1,h1,N0,i4
 
 " }}}
 "
-"let g:ycm_server_use_vim_stdout = 1
-"let g:ycm_server_log_level = 'debug'
+
+" color scheme
+colorscheme anotherdark
+set background=dark
 
 " Autocommands {{{
 
@@ -128,8 +130,8 @@ hi IncSearch guifg=#ffffff guibg=#8888ff gui=none ctermfg=black  ctermbg=white
 " key map========== {{{
 
 "Map jj to escape
-inoremap jj <Esc>
-inoremap kk <Esc>
+"inoremap jj <Esc>
+"inoremap kk <Esc>
 
 " Easy buffer navigation {{{
 noremap <C-h> <C-w>h
@@ -140,6 +142,8 @@ noremap <C-l> <C-w>l
 
 " don`t copy the replaced word into the paste buffer
 vnoremap p "_dP
+" star key won't jump to the next
+nnoremap * *#
 
 nnoremap <silent> <Leader>l ml:execute 'match Search /\%'.line('.').'l/'<CR>
 
@@ -177,21 +181,24 @@ autocmd FileType c,cabal,cpp,haskell,javascript,php,python,readme,text
 " }}}
 
 " compiler
-compiler! buck
-autocmd FileType c,cpp compiler! buck
-
+if executable('buck')
+  compiler! buck
+  autocmd FileType c,cpp compiler! buck
+endif
+let g:dispatch_quickfix_height=20
+let g:dispatch_tmux_height=20
 " color========== {{{
 " vimdiff color {{{
-highlight DiffAdd    cterm=bold ctermbg=22 " Green
-highlight DiffDelete cterm=bold ctermbg=52 " Red
-highlight DiffChange cterm=bold ctermbg=17 " Blue
-highlight DiffText   cterm=bold ctermbg=18
+"highlight DiffAdd    cterm=bold ctermbg=22 " Green
+"highlight DiffDelete cterm=bold ctermbg=52 " Red
+"highlight DiffChange cterm=bold ctermbg=17 " Blue
+"highlight DiffText   cterm=bold ctermbg=18
 " }}}
 " }}}
 
 " plugins=========  {{{
 " tagbar {{{
-  autocmd WinEnter,VimEnter, BufEnter  * nested :call tagbar#autoopen(1)
+"  autocmd WinEnter,VimEnter, BufEnter  * nested :call tagbar#autoopen(1)
 " }}}
 
 "fugitive {{{
@@ -308,13 +315,6 @@ let g:unite_source_file_mru_limit = 200
 " For optimize.
 let g:unite_source_file_mru_filename_format = ''
 
-" For ack.
-"if executable('ack')
-  "let g:unite_source_grep_command = 'ack'
-  "let g:unite_source_grep_default_opts = '--no-heading --no-color -a -H'
-  "let g:unite_source_grep_recursive_opt = ''
-"endif
-
 " }}}
 
 "airline {{{
@@ -337,29 +337,59 @@ let g:airline#extensions#default#section_truncate_width = {
   \ 'z': 60,
   \ 'warning': 200, 
   \ }
-
+let g:airline_extensions = ['branch']
 " }}}
 
-" tab line {{{
-
-hi TabLine      ctermfg=Black  ctermbg=DarkGreen     cterm=NONE
-hi TabLineFill  ctermfg=Black  ctermbg=Green     cterm=NONE
-hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
-
-" }}}
+"lightline {{{
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'fugitive', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component': {
+      \   'readonly': '%{&filetype=="help"?"":&readonly?"⭤":""}',
+      \   'modified': '%#ModifiedColor#%{LightlineModified()}',
+      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
+      \ },
+      \ 'component_visible_condition': {
+      \   'readonly': '(&filetype!="help"&& &readonly)',
+      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
+      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+      \ },
+      \ 'separator': { 'left': '⮀', 'right': '⮂' },
+      \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
+      \ }
+function! LightlineModified()
+      let map = { 'V': 'n', "\<C-v>": 'n', 's': 'n', 'v': 'n', "\<C-s>": 'n', 'c': 'n', 'R': 'n'}
+      let mode = get(map, mode()[0], mode()[0])
+      let bgcolor = {'n': [240, '#585858'], 'i': [31, '#0087af']}
+      let color = get(bgcolor, mode, bgcolor.n)
+      exe printf('hi ModifiedColor ctermfg=196 ctermbg=%d guifg=#ff0000 guibg=%s term=bold cterm=bold',
+      \ color[0], color[1])
+      return &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+"}}}
 
 " YCM {{{
+if executable('/usr/local/fbcode/gcc-5-glibc-2.23/bin/python2.7')
+  let g:ycm_python_binary_path = '/usr/local/fbcode/gcc-5-glibc-2.23/bin/python2.7'
+  let g:ycm_path_to_python_interpreter = '/usr/local/fbcode/gcc-5-glibc-2.23/bin/python2.7'
+endif
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_min_num_identifier_candidate_chars = 2
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf = '~/ycm/ycm_extra_conf.py'
 let g:ycm_seed_identifiers_with_syntax = 1 
 let g:ycm_confirm_extra_conf = 0 "disable annomying "ycm_extra_conf.py. Load?" popup everytime
+let g:ycm_server_use_vim_stdout = 0
+let g:ycm_server_log_level = 'debug'
+let g:ycm_log_level = 'debug'
 
-let g:ycm_show_diagnostics_ui =0 "disable syntax check
+let g:ycm_show_diagnostics_ui =1 "enable syntax check
 let g:ycm_error_symbol = '✗'
 let g:ycm_warning_symbol = '!'
 let g:ycm_enable_diagnostic_signs = 1
-let g:ycm_enable_diagnostic_highlighting = 1
+let g:ycm_enable_diagnostic_highlighting = 0
 let g:ycm_echo_current_diagnostic = 1
 " using tag in ycm
 " let g:ycm_collect_identifiers_from_tags_files = 0 
@@ -372,11 +402,6 @@ nnoremap <leader>pc :YcmCompleter GoToDeclaration<CR>
 " YCM forceComple on save
 "autocmd FileType c, h, cpp, python
       "\ autocmd BufWritePost * YcmForceCompileAndDiagnostics 
-" }}}
-
-"autoformat {{{
-let g:formatprg_cpp = "astyle"
-let g:formatprg_args_cpp = " --style=google --indent=spaces=2 --pad-oper --pad-header --indent-modifiers --attach-classes --indent-col1-comments --max-instatement-indent="
 " }}}
 
 " }}}

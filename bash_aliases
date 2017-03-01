@@ -42,18 +42,19 @@ dbdump() {
   command db -d -r "$@"
 }
 
-fbmake() {
-  if [ $# = 0 ]; then
-    command fbmake dbg -j70
-  else
-    command fbmake $@
-  fi
-}
-
-bbd() {
-  command buck build @mode/dbg
-}
-
-fbconfig() {
-  command fbconfig --clang $@
+# for ycm completion
+function gen_cdb() {
+  FBCODE=$(pwd | grep -o ".*/fbcode[^/]*/")
+  echo "Run in $FBCODE"
+  cd "$FBCODE"
+  COMMAND="./tools/codegraph/buck_compilation_databases -o ./buck-out/list.json --transitive "
+  for var in "$@"
+  do
+    COMMAND+="--buck-target //$var "
+  done
+  eval "$COMMAND"
+  eval jq -s add `jq ".[]" ./buck-out/list.json | tr '\n' ' '` | jq 'del(.[].arguments)' >! \
+    compile_commands.json
+  echo All Done
+  ls -lah compile_commands.json
 }
