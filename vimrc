@@ -3,7 +3,6 @@ set fdm=marker
 
 " To disable a plugin, add it's bundle name to the following list
 let g:pathogen_disabled = []
-
 call pathogen#infect() 
 
 "copy to tmux
@@ -60,7 +59,7 @@ set cinoptions+=g1,h1,N0,i4
 "
 
 " color scheme
-colorscheme anotherdark
+" colorscheme anotherdark
 set background=dark
 
 " Autocommands {{{
@@ -163,12 +162,12 @@ autocmd FileType c,cabal,cpp,haskell,javascript,php,python,readme,text
 " }}}
 
 " File type mapping {{{
- filetype on
- au BufNewFile,BufRead *.tw set filetype=python
- au BufNewFile,BufRead *.cinc set filetype=python
- au BufNewFile,BufRead *.thrift set filetype=cpp
- au BufNewFile,BufRead TARGETS set filetype=python
- au BufNewFile,BufRead *.cconf set filetype=python
+filetype on
+au BufNewFile,BufRead *.tw set filetype=python
+au BufNewFile,BufRead *.cinc set filetype=python
+au BufNewFile,BufRead *.thrift set filetype=cpp
+au BufNewFile,BufRead TARGETS set filetype=python
+au BufNewFile,BufRead *.cconf set filetype=python
 
 
 " }}}
@@ -223,13 +222,13 @@ let g:lightline = {
       \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
       \ }
 function! LightlineModified()
-      let map = { 'V': 'n', "\<C-v>": 'n', 's': 'n', 'v': 'n', "\<C-s>": 'n', 'c': 'n', 'R': 'n'}
-      let mode = get(map, mode()[0], mode()[0])
-      let bgcolor = {'n': [240, '#585858'], 'i': [31, '#0087af']}
-      let color = get(bgcolor, mode, bgcolor.n)
-      exe printf('hi ModifiedColor ctermfg=196 ctermbg=%d guifg=#ff0000 guibg=%s term=bold cterm=bold',
-      \ color[0], color[1])
-      return &modified ? '+' : &modifiable ? '' : '-'
+  let map = { 'V': 'n', "\<C-v>": 'n', 's': 'n', 'v': 'n', "\<C-s>": 'n', 'c': 'n', 'R': 'n'}
+  let mode = get(map, mode()[0], mode()[0])
+  let bgcolor = {'n': [240, '#585858'], 'i': [31, '#0087af']}
+  let color = get(bgcolor, mode, bgcolor.n)
+  exe printf('hi ModifiedColor ctermfg=196 ctermbg=%d guifg=#ff0000 guibg=%s term=bold cterm=bold',
+        \ color[0], color[1])
+  return &modified ? '+' : &modifiable ? '' : '-'
 endfunction
 "}}}
 
@@ -273,98 +272,98 @@ let g:gutentags_ctags_extra_args += [
 " Enable more debugging stuff
 let g:gutentags_define_advanced_commands = 1
 if !isdirectory(s:vim_tags)
-   silent! call mkdir(s:vim_tags, 'p')
+  silent! call mkdir(s:vim_tags, 'p')
 endif
 augroup MyGutentagsStatusLineRefresher
-    autocmd!
-    autocmd User GutentagsUpdating call lightline#update()
-    autocmd User GutentagsUpdated call lightline#update()
+  autocmd!
+  autocmd User GutentagsUpdating call lightline#update()
+  autocmd User GutentagsUpdated call lightline#update()
 augroup END
 " }}}
 
 " denite {{{
-  " The prefix key.
-  nnoremap    [denite]   <Nop>
-  nmap    <space> [denite]
-  
-	" Define mappings
-	autocmd FileType denite call s:denite_my_settings()
-	function! s:denite_my_settings() abort
-	  nnoremap <silent><buffer><expr> <CR>
-	  \ denite#do_map('do_action')
-	  nnoremap <silent><buffer><expr> d
-	  \ denite#do_map('do_action', 'delete')
-	  nnoremap <silent><buffer><expr> p
-	  \ denite#do_map('do_action', 'preview')
-	  nnoremap <silent><buffer><expr> q
-	  \ denite#do_map('quit')
-	  nnoremap <silent><buffer><expr> i
-	  \ denite#do_map('open_filter_buffer')
-    nnoremap <silent><buffer><expr> <Space>
-	  \ denite#do_map('toggle_select').'j'
-	  nnoremap <silent><buffer><expr> r
-    \ denite#do_map('do_action', 'quickfix')
-    nnoremap <silent><buffer><expr> <C-s>
-    \ denite#do_map('do_action', 'split')
-    nnoremap <silent><buffer><expr> <C-v>
-    \ denite#do_map('do_action', 'vsplit')
-    nnoremap <silent><buffer><expr> <C-t>
-    \ denite#do_map('do_action', 'tabopen')
-  endfunction
+"" The prefix key.
+nnoremap    [denite]   <Nop>
+nmap    <space> [denite]
 
-	autocmd FileType denite-filter call s:denite_filter_my_settings()
-	function! s:denite_filter_my_settings() abort
-	  imap <silent><buffer> jj <Plug>(denite_filter_quit)
-	endfunction
+"" Define mappings
+autocmd FileType denite call s:denite_my_settings()
+function! s:denite_my_settings() abort
+  nnoremap <silent><buffer><expr> <CR>
+        \ denite#do_map('do_action')
+  nnoremap <silent><buffer><expr> d
+        \ denite#do_map('do_action', 'delete')
+  nnoremap <silent><buffer><expr> p
+        \ denite#do_map('do_action', 'preview')
+  nnoremap <silent><buffer><expr> q
+        \ denite#do_map('quit')
+  nnoremap <silent><buffer><expr> i
+        \ denite#do_map('open_filter_buffer')
+  nnoremap <silent><buffer><expr> <Space>
+        \ denite#do_map('toggle_select').'j'
+  nnoremap <silent><buffer><expr> r
+        \ denite#do_map('do_action', 'quickfix')
+  nnoremap <silent><buffer><expr> <C-s>
+        \ denite#do_map('do_action', 'split')
+  nnoremap <silent><buffer><expr> <C-v>
+        \ denite#do_map('do_action', 'vsplit')
+  nnoremap <silent><buffer><expr> <C-t>
+        \ denite#do_map('do_action', 'tabopen')
+endfunction
 
-  nnoremap [denite]b :Denite buffer file file/rec -start-filter<cr>
+autocmd FileType denite-filter call s:denite_filter_my_settings()
+function! s:denite_filter_my_settings() abort
+  imap <silent><buffer> jj <Plug>(denite_filter_quit)
+endfunction
 
-  nnoremap [denite]d :DeniteBufferDir buffer file file/rec -start-filter<cr>
-  nnoremap [denite]/ :DeniteBufferDir -start-filter grep:::!<CR>
-  nnoremap [denite]* :DeniteBufferDir -buffer-name=grep -input=<C-R><C-W> grep:::!<cr>
+nnoremap [denite]b :Denite buffer file file/rec -start-filter<cr>
 
-  "AUTODEPS is used in the project
-  nnoremap [denite]pd :DeniteProjectDir file/rec -root-markers='AUTODEPS' -start-filter<cr>
-  nnoremap [denite]p* :DeniteProjectDir -buffer-name=grep -root-markers='AUTODEPS' -input=<C-R><C-W> grep:::!<cr>
-  nnoremap [denite]p/ :DeniteProjectDir -buffer-name=grep -root-markers='AUTODEPS' -start-filter grep:::!<cr>
+nnoremap [denite]d :DeniteBufferDir buffer file file/rec -start-filter<cr>
+nnoremap [denite]/ :DeniteBufferDir -start-filter grep:::!<CR>
+nnoremap [denite]* :DeniteBufferDir -buffer-name=grep -input=<C-R><C-W> grep:::!<cr>
 
-  nnoremap [denite]o :Denite outline<cr>
-  nnoremap [denite]r :Denite -resume<cr>
-  nnoremap [denite]j :Denite jump<cr>
-  nnoremap [denite]u :Denite register<cr>
-  
-  "grep and find in current vim dir
-  nnoremap [denite]f :Denite -start-filter grep:::!<cr>
-  nnoremap [denite]g :DeniteCursorWord grep:.<cr>
-  "grep in current file
-  nnoremap [denite]k :Denite grep:%<cr>
-  nnoremap [denite]l :DeniteCursorWord grep:%<cr>
+""AUTODEPS is used in the project
+nnoremap [denite]pd :DeniteProjectDir file/rec -root-markers='AUTODEPS' -start-filter<cr>
+nnoremap [denite]p* :DeniteProjectDir -buffer-name=grep -root-markers='AUTODEPS' -input=<C-R><C-W> grep:::!<cr>
+nnoremap [denite]p/ :DeniteProjectDir -buffer-name=grep -root-markers='AUTODEPS' -start-filter grep:::!<cr>
 
-	" Change file/rec command.
-	call denite#custom#var('file/rec', 'command',
-	\ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+nnoremap [denite]o :Denite outline<cr>
+nnoremap [denite]r :Denite -resume<cr>
+nnoremap [denite]j :Denite jump<cr>
+nnoremap [denite]u :Denite register<cr>
 
-	" Change matchers.
-	call denite#custom#source(
-	\ 'file_mru', 'matchers', ['matcher/fuzzy', 'matcher/project_files'])
-  call denite#custom#source(
-        \ 'file/rec', 'matchers', ['matcher/cpsm'])
+""grep and find in current vim dir
+nnoremap [denite]f :Denite -start-filter grep:::!<cr>
+nnoremap [denite]g :DeniteCursorWord grep:.<cr>
+""grep in current file
+nnoremap [denite]k :Denite grep:%<cr>
+nnoremap [denite]l :DeniteCursorWord grep:%<cr>
 
-  " Change sorters.
-	call denite#custom#source(
-	\ 'file/rec', 'sorters', ['sorter/sublime'])
+"" Change file/rec command.
+call denite#custom#var('file/rec', 'command',
+      \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
 
-	" Change default action.
-	call denite#custom#kind('file', 'default_action', 'open')
+"" Change matchers.
+call denite#custom#source(
+      \ 'file_mru', 'matchers', ['matcher/fuzzy', 'matcher/project_files'])
+call denite#custom#source(
+      \ 'file/rec', 'matchers', ['matcher/cpsm'])
 
-	" Change ignore_globs
-	call denite#custom#filter('matcher/ignore_globs', 'ignore_globs',
-	      \ [ '.git/', '.ropeproject/', '__pycache__/',
-	      \   'venv/', 'images/', '*.min.*', 'img/', 'fonts/'])
+"" Change sorters.
+call denite#custom#source(
+      \ 'file/rec', 'sorters', ['sorter/sublime'])
 
-  call denite#custom#option('_', 'highlight_mode_insert', 'CursorLine')
-  call denite#custom#option('_', 'highlight_matched_range', 'None')
-  call denite#custom#option('_', 'highlight_matched_char', 'None')
+"" Change default action.
+call denite#custom#kind('file', 'default_action', 'open')
+
+"" Change ignore_globs
+call denite#custom#filter('matcher/ignore_globs', 'ignore_globs',
+      \ [ '.git/', '.ropeproject/', '__pycache__/',
+      \   'venv/', 'images/', '*.min.*', 'img/', 'fonts/'])
+
+call denite#custom#option('_', 'highlight_mode_insert', 'CursorLine')
+call denite#custom#option('_', 'highlight_matched_range', 'None')
+call denite#custom#option('_', 'highlight_matched_char', 'None')
 " }}}
 
 " }}}

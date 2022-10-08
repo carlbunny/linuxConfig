@@ -23,3 +23,4 @@ if exists('g:vscode')
     " set hlsearch                   " Highlights searched phrase
     set ignorecase                 " Ignore case sensitivity for searching
     set smartcase                  " Ignore case sensitivity unless capital
+endif

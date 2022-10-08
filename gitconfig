@@ -13,7 +13,8 @@
 [merge]
   tool = vimdiff
 [user]
-	email = carl.fu@databricks.com
+	email = carlcorvette@gmail.com
+	name = carlbunny
 
 # [http]
 # proxy = https://fwdproxy:8082
