@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 #
 # Executes commands at the start of an interactive session.
 #
@@ -11,34 +18,27 @@
 # Source Prezto.
 source $HOME/.zprezto/runcoms/zshrc
 
-# Customize to your needs...
-if [[ -s '/mnt/vol/engshare/admin/scripts' ]]; then
-  # On devserver
-  [[ -z "$ADMIN_SCRIPTS" ]] && export ADMIN_SCRIPTS='/mnt/vol/engshare/admin/scripts'
-  source "${ADMIN_SCRIPTS}/master.zshrc"
-
-  source "${ADMIN_SCRIPTS}/scm-prompt"
-else
-  source "~/scm-prompt"
-fi
+export PATH=~/bin:/usr/local/bin:$PATH
 
 # User specific aliases and functions
 if [ -f ~/.bash_aliases ]; then
-	. ~/.bash_aliases
+  source ~/.bash_aliases
 fi
+
 
 # weird zsh history
 alias history='history 1'
 
 autoload -Uz promptinit
 promptinit
-prompt carlbunny
-#prompt peepcode
+
+# show non-zero return
+# open ~/.p10k.zsh, set POWERLEVEL9K_STATUS_ERROR=true
+prompt powerlevel10k
 
 export EDITOR=$(which vim)
 export VISUAL=$(which vim)
 
-export PATH=~/bin:$PATH
 
 zssh() ssh "$@" -t zsh
 
@@ -53,14 +53,6 @@ zstyle ':completion:*' hosts off
 zstyle ':completion:*' accept-exact '*(N)'
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
-
-# Try to slove cd completion slow under git.
-__git_files () {
-  _wanted files expl 'local files' _files   
-}
-
-#key binding
-#bindkey '"\C-p": shell-backward-kill-word'
 
 # Instead of
 # INC_APPEND_HISTORY,
@@ -78,4 +70,5 @@ if [[ -z "$TMUX" ]] && [[ "$_myos" = "Linux" ]] ;then
   fi
 fi
 
-
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

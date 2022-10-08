@@ -1,22 +1,10 @@
 " vimrc fold
 set fdm=marker  
 
-" Source the vimrc file after saving it
-if has("autocmd")
-  autocmd bufwritepost .vimrc source $MYVIMRC
-endif
-
 " To disable a plugin, add it's bundle name to the following list
 let g:pathogen_disabled = []
 
 call pathogen#infect() 
-
-if isdirectory($ADMIN_SCRIPTS)
-  source $ADMIN_SCRIPTS/master.vimrc
-  "source $ADMIN_SCRIPTS/vim/biggrep.vim
-  " Have more control over what plugins get loaded
-  "  set runtimepath-=$ADMIN_SCRIPTS/vim
-endif
 
 "copy to tmux
 set clipboard=unnamed
@@ -27,6 +15,7 @@ set wildmenu
 " + and - to resize window
 nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
+
 
 " Vim setting {{{
 
@@ -48,7 +37,7 @@ set mouse=a
 set history=10000
 
 " keep going up a dir until you find a tags file
-set tags=tags;/
+set tags=./.tags;,.tags
 
 set nu
 set ruler
@@ -84,8 +73,8 @@ augroup hi_CursorLine
 augroup END
 
 " Save on FocusLost
-au FocusLost * :silent! wall " Save on FocusLost
-au FocusLost * call feedkeys("\<C-\>\<C-n>") " Return to normal mode on FocustLost
+"au FocusLost * :silent! wall " Save on FocusLost
+"au FocusLost * call feedkeys("\<C-\>\<C-n>") " Return to normal mode on FocustLost
 
 " Disable paste mode when leaving Insert Mode
 au InsertLeave * set nopaste
@@ -130,7 +119,7 @@ hi IncSearch guifg=#ffffff guibg=#8888ff gui=none ctermfg=black  ctermbg=white
 " key map========== {{{
 
 "Map jj to escape
-"inoremap jj <Esc>
+inoremap jj <Esc>
 "inoremap kk <Esc>
 
 " Easy buffer navigation {{{
@@ -152,6 +141,9 @@ map <F5> :set spell! spelllang=en_us<CR>
 map <F6> :set ignorecase! <CR>
 nnoremap <F7> :NERDTreeToggle<CR>
 nmap <F8> :Tagbar<CR>
+" clang-format
+map <F4> :py3f /usr/local/share/clang/clang-format.py<CR>
+imap <F4> <ESC>:py3f /usr/local/share/clang/clang-format.py<CR>i
 "set paste mode, will disable all the auto function in the view
 set pastetoggle=<F9>
 
@@ -173,6 +165,7 @@ autocmd FileType c,cabal,cpp,haskell,javascript,php,python,readme,text
 " File type mapping {{{
  filetype on
  au BufNewFile,BufRead *.tw set filetype=python
+ au BufNewFile,BufRead *.cinc set filetype=python
  au BufNewFile,BufRead *.thrift set filetype=cpp
  au BufNewFile,BufRead TARGETS set filetype=python
  au BufNewFile,BufRead *.cconf set filetype=python
@@ -197,10 +190,6 @@ let g:dispatch_tmux_height=20
 " }}}
 
 " plugins=========  {{{
-" tagbar {{{
-"  autocmd WinEnter,VimEnter, BufEnter  * nested :call tagbar#autoopen(1)
-" }}}
-
 "fugitive {{{
 set statusline+={fugitive#statusline()}
 " }}}
@@ -209,153 +198,26 @@ set statusline+={fugitive#statusline()}
 let g:cpp_class_scope_highlight = 1
 " }}}
 
-" unit {{{
-" The prefix key.
-nnoremap    [unite]   <Nop>
-nmap    <space> [unite]
-
-nnoremap <silent> [unite]s  :Unite -start-insert file_rec/async<cr>
-nnoremap <silent> [unite]b  :<C-u>Unite -start-insert -buffer-name=files buffer file <CR>
-nnoremap <silent> [unite]d  :<C-u>UniteWithBufferDir -start-insert
-      \ -buffer-name=files -prompt=%\  buffer file file_mru<CR>
-nnoremap <silent> [unite]r  :<C-u>Unite
-      \ -buffer-name=register register<CR>
-nnoremap <silent> [unite]o  :<C-u>Unite outline<CR>
-nnoremap <silent> [unite]ma
-      \ :<C-u>Unite mapping<CR>
-nnoremap <silent> [unite]me
-      \ :<C-u>Unite output:message<CR>
-nnoremap  [unite]f  :<C-u>Unite source<CR>
-"grep and find in current vim dir
-nnoremap [unite]f :UniteWithInput grep:.<cr>
-nnoremap [unite]g :UniteWithCursorWord grep:.<cr>
-"grep in current file
-nnoremap [unite]k :UniteWithInput grep:%<cr>
-nnoremap [unite]l :UniteWithCursorWord grep:%<cr>
-"grep in the current bufer dir
-nnoremap [unite]/ :UniteWithInput grep:<C-R>=expand("%:p:h")<CR><CR>
-nnoremap [unite]* :UniteWithCursorWord grep:<C-R>=expand("%:p:h")<CR><CR>
-
-"Tab
-nnoremap [unite]t :Unite tab<cr>
-"Resume
-nnoremap [unite]r :UniteResume<cr>
-"Window
-nnoremap [unite]w :Unite window<cr>
-"Jump
-nnoremap [unite]j :Unite jump<cr>
-"Changes
-nnoremap [unite]c :Unite change<cr>
-"Register
-nnoremap [unite]u :Unite -buffer-name=register register<CR>
-"Yank
-nnoremap [unite]y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
-
-let g:unite_enable_short_source_names = 1
-
-" To track long mru history.
-let g:unite_source_file_mru_long_limit = 3000
-let g:unite_source_directory_mru_long_limit = 3000
-
-" Prompt choices.
-let g:unite_prompt = '» '
-
-" open preview vertically
-let g:unite_kind_file_vertical_preview = 1
-
-autocmd FileType unite call s:unite_my_settings()
-function! s:unite_my_settings()"{{{
-  " Overwrite settings.
-
-  imap <buffer> jj      <Plug>(unite_insert_leave)
-  "imap <buffer> <C-w>     <Plug>(unite_delete_backward_path)
-
-  imap <buffer><expr> j unite#smart_map('j', '')
-  imap <buffer> <TAB>   <Plug>(unite_select_next_line)
-  imap <buffer> <C-w>     <Plug>(unite_delete_backward_path)
-  nmap <buffer> '     <Plug>(unite_quick_match_default_action)
-  imap <buffer><expr> x
-        \ unite#smart_map('x', "\<Plug>(unite_quick_match_choose_action)")
-  nmap <buffer> x     <Plug>(unite_quick_match_choose_action)
-  nmap <buffer> <C-z>     <Plug>(unite_toggle_transpose_window)
-  imap <buffer> <C-y>     <Plug>(unite_narrowing_path)
-  nmap <buffer> <C-p>     <Plug>(unite_toggle_auto_preview)
-  nmap <buffer> <C-r>     <Plug>(unite_narrowing_input_history)
-  nnoremap <silent><buffer><expr> l
-        \ unite#smart_map('l', unite#do_action('default'))
-
-  let unite = unite#get_current_unite()
-  if unite.profile_name ==# 'search'
-    nnoremap <silent><buffer><expr> r     unite#do_action('replace')
-  else
-    nnoremap <silent><buffer><expr> r     unite#do_action('rename')
-  endif
-
-  nnoremap <silent><buffer><expr> lc     unite#do_action('lcd')
-  nnoremap <silent><buffer><expr> c     unite#do_action('cd')
-  nnoremap <silent><buffer><expr> u     unite#do_action('rec_parent')
-  nnoremap <buffer><expr> S      unite#mappings#set_current_filters(
-        \ empty(unite#mappings#get_current_filters()) ?
-        \ ['sorter_reverse'] : [])
-
-" why we have two for each line is because
-" noremap is in normal mode(normal,visual,operator pending) 
-" inoremap is in insert mode
-
-  noremap <silent><buffer><expr> <C-s>     unite#do_action('split')
-  inoremap <silent><buffer><expr> <C-s>     unite#do_action('split')
-  noremap <silent><buffer><expr> <C-v>     unite#do_action('vsplit')
-  inoremap <silent><buffer><expr> <C-v>     unite#do_action('vsplit')
-  noremap <silent><buffer><expr> <C-t>     unite#do_action('tabopen')
-  inoremap <silent><buffer><expr> <C-t>     unite#do_action('tabopen')
-endfunction"}}}
-
-let g:unite_source_file_mru_limit = 200
-
-" For optimize.
-let g:unite_source_file_mru_filename_format = ''
-
-" }}}
-
-"airline {{{
-"  variable names                default contents
-"  ----------------------------------------------------------------------------
-"  let g:airline_section_a       (mode, paste, iminsert)
-"  let g:airline_section_b       (hunks, branch)
-"  let g:airline_section_c       (bufferline or filename)
-"  let g:airline_section_gutter  (readonly, csv)
-"  let g:airline_section_x       (tagbar, filetype, virtualenv)
-"  let g:airline_section_y       (fileencoding, fileformat)
-"  let g:airline_section_z       (percentage, line number, column number)
-"  let g:airline_section_warning (syntastic, whitespace)
-
-" control which sections get truncated and at what width. 
-let g:airline#extensions#default#section_truncate_width = { 
-  \ 'b': 80, 
-  \ 'x': 120,
-  \ 'y': 250,
-  \ 'z': 60,
-  \ 'warning': 200, 
-  \ }
-let g:airline_extensions = ['branch']
-" }}}
-
 "lightline {{{
+" Show lightline when single buffer opened
+set laststatus=2
 let g:lightline = {
       \ 'colorscheme': 'wombat',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'fugitive', 'readonly', 'filename', 'modified' ] ]
+      \             [ 'fugitive', 'readonly', 'filename', 'modified', 'gutentags'] ]
       \ },
       \ 'component': {
       \   'readonly': '%{&filetype=="help"?"":&readonly?"⭤":""}',
       \   'modified': '%#ModifiedColor#%{LightlineModified()}',
-      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
+      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}',
+      \   'gutentags': '%{exists("*gutentags#statusline")?gutentags#statusline():""}',
       \ },
       \ 'component_visible_condition': {
       \   'readonly': '(&filetype!="help"&& &readonly)',
       \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
-      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())',
+      \   'gutentags': '("" != gutentags#statusline())',
       \ },
       \ 'separator': { 'left': '⮀', 'right': '⮂' },
       \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
@@ -371,37 +233,138 @@ function! LightlineModified()
 endfunction
 "}}}
 
-" YCM {{{
-if executable('/usr/local/fbcode/gcc-5-glibc-2.23/bin/python2.7')
-  let g:ycm_python_binary_path = '/usr/local/fbcode/gcc-5-glibc-2.23/bin/python2.7'
-  let g:ycm_path_to_python_interpreter = '/usr/local/fbcode/gcc-5-glibc-2.23/bin/python2.7'
+" Gutentags {{{
+" fleet_coordinator is used to locate tape project
+let g:gutentags_project_root = ['.root', 'if', '.git', '.hg', '.project', 'AUTODEPS']
+
+" 所生成的数据文件的名称
+let g:gutentags_ctags_tagfile = '.tags'
+
+" 将自动生成的 tags 文件全部放入 ~/.cache/tags 目录中，避免污染工程目录
+let s:vim_tags = expand('~/local/cache/tags')
+let g:gutentags_cache_dir = s:vim_tags
+if !isdirectory(s:vim_tags)
+  silent! call mkdir(s:vim_tags, 'p')
 endif
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_min_num_identifier_candidate_chars = 2
-let g:ycm_global_ycm_extra_conf = '~/ycm/ycm_extra_conf.py'
-let g:ycm_seed_identifiers_with_syntax = 1 
-let g:ycm_confirm_extra_conf = 0 "disable annomying "ycm_extra_conf.py. Load?" popup everytime
-let g:ycm_server_use_vim_stdout = 0
-let g:ycm_server_log_level = 'debug'
-let g:ycm_log_level = 'debug'
 
-let g:ycm_show_diagnostics_ui =1 "enable syntax check
-let g:ycm_error_symbol = '✗'
-let g:ycm_warning_symbol = '!'
-let g:ycm_enable_diagnostic_signs = 1
-let g:ycm_enable_diagnostic_highlighting = 0
-let g:ycm_echo_current_diagnostic = 1
-" using tag in ycm
-" let g:ycm_collect_identifiers_from_tags_files = 0 
+" 配置 ctags 的参数
+let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--python-kinds=-i']
+let g:gutentags_ctags_extra_args += [
+      \ '--langdef=thrift', 
+      \ '--langmap=thrift:.thrift',
+      \ '--regex-thrift=/^[ \t]*exception[ \t]+([a-zA-Z0-9_]+)/\1/x,exception/',
+      \ '--regex-thrift=/^[ \t]*enum[ \t]+([a-zA-Z0-9_]+)/\1/e,enum`/',
+      \ '--regex-thrift=/^[ \t]*struct[ \t]+([a-zA-Z0-9_]+)/\1/s,struct/',
+      \ '--regex-thrift=/^[ \t]*service[ \t]+([a-zA-Z0-9_]+)/\1/v,service/',
+      \ '--regex-thrift=/^[ \t]*[0-9]+:[ \t]+([a-zA-Z0-9_]+)[\t]+([a-zA-Z0-9_]+)/\2/m,member/',
+      \ '--regex-thrift=/^[ \t]*([a-zA-Z0-9_]+)[ \t]+=/\1/a,value/',
+      \ '--regex-thrift=/^[ \t]*[a-zA-Z0-9_<>]+[ \t]+([a-zA-Z0-9_]+)[ \t]*\(/\1/f,function/',
+      \ '--langmap=python:+.cinc',
+      \ '--langmap=python:+.cconf',
+      \ '--langmap=python:+.mconf',
+      \ '--langmap=python:+.tw',
+      \ '--extra=+f'
+      \ ]
 
-nnoremap <leader>y :YcmForceCompileAndDiagnostics<cr>
-nnoremap <leader>pg :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap <leader>pd :YcmCompleter GoToDefinition<CR>
-nnoremap <leader>pc :YcmCompleter GoToDeclaration<CR>
 
-" YCM forceComple on save
-"autocmd FileType c, h, cpp, python
-      "\ autocmd BufWritePost * YcmForceCompileAndDiagnostics 
+" Enable more debugging stuff
+let g:gutentags_define_advanced_commands = 1
+if !isdirectory(s:vim_tags)
+   silent! call mkdir(s:vim_tags, 'p')
+endif
+augroup MyGutentagsStatusLineRefresher
+    autocmd!
+    autocmd User GutentagsUpdating call lightline#update()
+    autocmd User GutentagsUpdated call lightline#update()
+augroup END
+" }}}
+
+" denite {{{
+  " The prefix key.
+  nnoremap    [denite]   <Nop>
+  nmap    <space> [denite]
+  
+	" Define mappings
+	autocmd FileType denite call s:denite_my_settings()
+	function! s:denite_my_settings() abort
+	  nnoremap <silent><buffer><expr> <CR>
+	  \ denite#do_map('do_action')
+	  nnoremap <silent><buffer><expr> d
+	  \ denite#do_map('do_action', 'delete')
+	  nnoremap <silent><buffer><expr> p
+	  \ denite#do_map('do_action', 'preview')
+	  nnoremap <silent><buffer><expr> q
+	  \ denite#do_map('quit')
+	  nnoremap <silent><buffer><expr> i
+	  \ denite#do_map('open_filter_buffer')
+    nnoremap <silent><buffer><expr> <Space>
+	  \ denite#do_map('toggle_select').'j'
+	  nnoremap <silent><buffer><expr> r
+    \ denite#do_map('do_action', 'quickfix')
+    nnoremap <silent><buffer><expr> <C-s>
+    \ denite#do_map('do_action', 'split')
+    nnoremap <silent><buffer><expr> <C-v>
+    \ denite#do_map('do_action', 'vsplit')
+    nnoremap <silent><buffer><expr> <C-t>
+    \ denite#do_map('do_action', 'tabopen')
+  endfunction
+
+	autocmd FileType denite-filter call s:denite_filter_my_settings()
+	function! s:denite_filter_my_settings() abort
+	  imap <silent><buffer> jj <Plug>(denite_filter_quit)
+	endfunction
+
+  nnoremap [denite]b :Denite buffer file file/rec -start-filter<cr>
+
+  nnoremap [denite]d :DeniteBufferDir buffer file file/rec -start-filter<cr>
+  nnoremap [denite]/ :DeniteBufferDir -start-filter grep:::!<CR>
+  nnoremap [denite]* :DeniteBufferDir -buffer-name=grep -input=<C-R><C-W> grep:::!<cr>
+
+  "AUTODEPS is used in the project
+  nnoremap [denite]pd :DeniteProjectDir file/rec -root-markers='AUTODEPS' -start-filter<cr>
+  nnoremap [denite]p* :DeniteProjectDir -buffer-name=grep -root-markers='AUTODEPS' -input=<C-R><C-W> grep:::!<cr>
+  nnoremap [denite]p/ :DeniteProjectDir -buffer-name=grep -root-markers='AUTODEPS' -start-filter grep:::!<cr>
+
+  nnoremap [denite]o :Denite outline<cr>
+  nnoremap [denite]r :Denite -resume<cr>
+  nnoremap [denite]j :Denite jump<cr>
+  nnoremap [denite]u :Denite register<cr>
+  
+  "grep and find in current vim dir
+  nnoremap [denite]f :Denite -start-filter grep:::!<cr>
+  nnoremap [denite]g :DeniteCursorWord grep:.<cr>
+  "grep in current file
+  nnoremap [denite]k :Denite grep:%<cr>
+  nnoremap [denite]l :DeniteCursorWord grep:%<cr>
+
+	" Change file/rec command.
+	call denite#custom#var('file/rec', 'command',
+	\ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+
+	" Change matchers.
+	call denite#custom#source(
+	\ 'file_mru', 'matchers', ['matcher/fuzzy', 'matcher/project_files'])
+  call denite#custom#source(
+        \ 'file/rec', 'matchers', ['matcher/cpsm'])
+
+  " Change sorters.
+	call denite#custom#source(
+	\ 'file/rec', 'sorters', ['sorter/sublime'])
+
+	" Change default action.
+	call denite#custom#kind('file', 'default_action', 'open')
+
+	" Change ignore_globs
+	call denite#custom#filter('matcher/ignore_globs', 'ignore_globs',
+	      \ [ '.git/', '.ropeproject/', '__pycache__/',
+	      \   'venv/', 'images/', '*.min.*', 'img/', 'fonts/'])
+
+  call denite#custom#option('_', 'highlight_mode_insert', 'CursorLine')
+  call denite#custom#option('_', 'highlight_matched_range', 'None')
+  call denite#custom#option('_', 'highlight_matched_char', 'None')
 " }}}
 
 " }}}

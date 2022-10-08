@@ -4,7 +4,7 @@
 echo "install zsh and prezto before running"
 
 LINUX_CONFIG_LOCAL="$( cd "$(readlink  $( dirname "${BASH_SOURCE[0]}" ))" && pwd )"
-ls "$LINUX_CONFIG_LOCAL" | grep -v "\.sh" | xargs -I {} ln -s {} ~/.{}
+ls "$LINUX_CONFIG_LOCAL" | grep -v "\.sh" | xargs -I {} ln -sf $LINUX_CONFIG_LOCAL/{} ~/.{}
 
 #copy the prompt 
-ls "$LINUX_CONFIG_LOCAL" | grep "prompt" | xargs -I {} ln -s {} ~/.zprezto/modules/prompt/functions/
+ls "$LINUX_CONFIG_LOCAL" | grep "prompt" | xargs -I {} ln -sf $LINUX_CONFIG_LOCAL/{} ~/.zprezto/modules/prompt/functions/

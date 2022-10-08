@@ -5,6 +5,7 @@
 [alias]
   l = log --graph --pretty=format:'%C(yellow)%h %C(red)%m %C(blue)%aE    \t%C(cyan)(%cr)%C(green)%d%Creset %s'
   la = log --all --graph --pretty=format:'%C(yellow)%h %C(red)%m %C(blue)%aE    \t%C(green)%d%Creset %s'
+	sl = smartlog
   
 [diff]
   tool = vimdiff
@@ -12,9 +13,9 @@
 [merge]
   tool = vimdiff
 [user]
-	email = carlfu@fb.com
+	email = carl.fu@databricks.com
 
-[http]
-      proxy = fwdproxy:8080
-[https]
-      proxy = fwdproxy:8080
+# [http]
+# proxy = https://fwdproxy:8082
+# proxySSLCert=/var/facebook/credentials/carlfu/x509/carlfu.pem
+# proxySSLKey=/var/facebook/credentials/carlfu/x509/carlfu.pem
